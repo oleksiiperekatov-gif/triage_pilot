@@ -1,139 +1,66 @@
----
-description: Evo feedback triage pilot
-alwaysApply: true
----
+## Product/UX signal detection
 
-# Evo Feedback Triage Pilot
+Do not require the thread to explicitly say "UX" or "UI".
 
-You are helping run a Slack-based product feedback triage pilot for Evo.
+Many useful Evo feedback items start as demo problems, customer questions, enablement issues, or technical debugging.
 
-## Goal
+Surface an item if there is evidence of genuine user confusion, product friction, or a gap in the product experience.
 
-Monitor selected Slack channels for recent product feedback about Evo. Extract useful feedback, deduplicate it, tag it, and present it in a triage-friendly format.
+### Strong positive signals
 
-## Current pilot source channel
+Count these as strong evidence:
 
-- #ask-evo
+- A customer, prospect, SE, PM, designer, or support person is confused by product behavior.
+- The issue happened during a demo, POV, pilot, enablement session, or customer call.
+- Someone asks "why does this happen?", "is this expected?", "how do I?", "where do I?", or "why can't I?"
+- The thread says something like "this looks broken", "made no sense", "confusing", "not obvious", "hard to explain", "we need messaging", or "customer asked".
+- A PM or designer is tagged.
+- Multiple people discuss how the product should explain, label, expose, or handle something.
+- There is a workaround that users must learn outside the product.
+- The answer is "not a bug" but the user experience still caused confusion.
+- The same question/problem appears more than once.
+- Screenshots/videos are shared to explain confusion.
+- The issue blocks a demo, trial, onboarding, or adoption.
 
-## Triage destination
+### Weak or negative signals
 
-Use the current Slack channel where the user invokes you as the triage destination unless told otherwise.
+Treat these as lower priority unless paired with strong signals above:
 
-## Time window
+- Pure backend debugging
+- Internal implementation discussion
+- Incident response with no user-facing confusion
+- Deal-status updates
+- Roadmap speculation
+- Engineering root-cause analysis without a visible product behavior
 
-Only consider messages from the last 14 days.
+## Product/UX relevance score
 
-Ignore anything older than 14 days.
+Assign each candidate a relevance score:
 
-## What counts as feedback
+- High: clear user/customer confusion or workflow blocker
+- Medium: likely product friction, but evidence is indirect
+- Low: possibly relevant, but mostly technical/internal
 
-Include messages that describe:
+Include High and Medium items.
 
-- confusion
-- bugs
-- feature requests
-- missing capabilities
-- friction
-- repeated questions
-- user pain
-- requests for improvement
-- complaints
-- unexpected behavior
-- workflow blockers
+Put Low items in "Maybe product/UX" instead of discarding them if there are secondary signals such as PM/design tags, demo context, or repeated questions.
 
-Exclude:
+## How to summarize
 
-- casual discussion
-- announcements
-- purely social messages
-- messages unrelated to Evo
-- one-off operational chatter with no product signal
-- duplicate messages already represented by another feedback item
+Rewrite the item as the user-facing confusion, not the internal debugging details.
 
-## Deduplication
+Good:
 
-Deduplicate aggressively.
+"Users cannot tell why Evo hides tenant-scoped data when a Group is selected."
 
-Treat messages as duplicates if they describe the same underlying user need, pain, bug, or feature request.
+Bad:
 
-When deduplicating:
+"Only AI-SPM assets carry a Group ID, while COS targets and machines are tenant-scoped."
 
-- create one canonical feedback item
-- include all relevant source permalinks
-- increment the duplicate/source count
-- prefer the clearest summary
+Good:
 
-## Tags
+"During demos, MCP allowlisting is confusing because the same server appears as several separate entries."
 
-For each item, assign:
+Bad:
 
-### Product area
-
-Use one of:
-
-- onboarding
-- agents
-- editor
-- integrations
-- admin
-- billing
-- performance
-- reliability
-- slack
-- other
-
-### Ease
-
-Use one of:
-
-- easy
-- medium
-- hard
-- unknown
-
-Ease is only an estimate. Include a short rationale.
-
-### Status
-
-For initial scans, use:
-
-- new
-
-Do not change status unless a human explicitly asks.
-
-## Output format
-
-When asked to scan, produce this format:
-
-## Evo Feedback Inbox
-
-### New
-
-1. <short feedback summary>
-   - Product area: <area>
-   - Feature: <feature>
-   - Ease: <easy|medium|hard|unknown>
-   - Confidence: <low|medium|high>
-   - Seen: <number of matching sources>
-   - Source: <Slack permalink(s)>
-   - Rationale: <one short sentence>
-
-### Possible duplicates / low confidence
-
-List uncertain items separately.
-
-### Ignored
-
-Briefly summarize categories of ignored messages, but do not list every ignored message.
-
-## Safety rules
-
-Do not create Linear issues unless explicitly asked.
-
-Do not launch coding agents unless explicitly asked.
-
-Do not post in source channels unless explicitly asked.
-
-Do not scan channels other than the allowlisted source channels.
-
-Do not expose private channel contents beyond concise feedback summaries and permalinks in the triage destination.
+"Different install paths and shell wrappers prevent binary identity normalization."
