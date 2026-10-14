@@ -1,14 +1,37 @@
-## Product/UX signal detection
+---
+description: Evo feedback triage pilot
+alwaysApply: true
+---
+
+# Evo Feedback Triage Pilot
+
+You are helping run a Slack-based product feedback triage pilot for Evo.
+
+## Goal
+
+Monitor selected Slack channels for recent product feedback about Evo. Extract useful feedback, deduplicate it, tag it, and present it in a triage-friendly format.
+
+The goal is not to summarize every technical issue. The goal is to find user-facing product friction, genuine confusion, unclear behavior, missing messaging, and workflow blockers that should be reviewed by product/design/engineering.
+
+## Source channel
+
+- #ask-evo
+
+## Time window
+
+Only consider messages from the last 14 days.
+
+Ignore anything older than 14 days.
+
+## What counts as useful feedback
 
 Do not require the thread to explicitly say "UX" or "UI".
 
 Many useful Evo feedback items start as demo problems, customer questions, enablement issues, or technical debugging.
 
-Surface an item if there is evidence of genuine user confusion, product friction, or a gap in the product experience.
+Surface an item if there is evidence of genuine user confusion, product friction, unclear product behavior, missing messaging, or a workflow gap.
 
-### Strong positive signals
-
-Count these as strong evidence:
+Strong positive signals:
 
 - A customer, prospect, SE, PM, designer, or support person is confused by product behavior.
 - The issue happened during a demo, POV, pilot, enablement session, or customer call.
@@ -22,9 +45,7 @@ Count these as strong evidence:
 - Screenshots/videos are shared to explain confusion.
 - The issue blocks a demo, trial, onboarding, or adoption.
 
-### Weak or negative signals
-
-Treat these as lower priority unless paired with strong signals above:
+Weak or negative signals:
 
 - Pure backend debugging
 - Internal implementation discussion
@@ -33,34 +54,243 @@ Treat these as lower priority unless paired with strong signals above:
 - Roadmap speculation
 - Engineering root-cause analysis without a visible product behavior
 
-## Product/UX relevance score
+If a technical thread has a clear user-facing impact, rewrite it as the user-facing problem and omit unnecessary engineering details.
 
-Assign each candidate a relevance score:
+## Product/UX relevance
 
-- High: clear user/customer confusion or workflow blocker
-- Medium: likely product friction, but evidence is indirect
-- Low: possibly relevant, but mostly technical/internal
+Assign each candidate a relevance level:
 
-Include High and Medium items.
+- high: clear user/customer confusion or workflow blocker
+- medium: likely product friction, but evidence is indirect
+- low: possibly relevant, but mostly technical/internal
 
-Put Low items in "Maybe product/UX" instead of discarding them if there are secondary signals such as PM/design tags, demo context, or repeated questions.
+Include high and medium items.
 
-## How to summarize
+Put low items in "Maybe product feedback" instead of discarding them if there are secondary signals such as PM/design tags, demo context, repeated questions, or customer/prospect involvement.
 
-Rewrite the item as the user-facing confusion, not the internal debugging details.
+## Deduplication
 
-Good:
+Deduplicate aggressively.
+
+Treat messages as duplicates if they describe the same underlying user need, pain, confusion, bug, or feature request.
+
+When deduplicating:
+
+- create one canonical feedback item
+- include all relevant source permalinks
+- increment the seen count
+- prefer the clearest user-facing summary
+
+## Tags
+
+For each item, assign:
+
+### Area
+
+Use one of:
+
+- onboarding
+- navigation
+- permissions
+- settings
+- reporting
+- error-message
+- terminology
+- workflow
+- discoverability
+- reliability
+- integrations
+- other
+
+### Feature
+
+Use a short human-readable feature name.
+
+### Ease
+
+Use one of:
+
+- easy
+- medium
+- hard
+- unknown
+
+Ease is only an estimate. Do not over-explain it.
+
+## Valid statuses
+
+Use only these statuses:
+
+- new
+- discarded
+- in-progress
+- done
+
+Do not use agent-candidate. The human user will decide how to action items.
+
+## Feedback item identity
+
+Every feedback item must have a stable ID:
+
+- EVO-FB-001
+- EVO-FB-002
+- EVO-FB-003
+
+Do not reuse IDs.
+
+Use the ID in:
+
+- the durable record
+- the individual Slack item message
+- the pinned inbox/index message
+- any future Linear/GitHub issue
+
+## Source of truth
+
+Do not treat one giant Slack message or canvas as the source of truth.
+
+Use this model:
+
+1. One durable record per feedback item.
+2. One Slack message/thread per feedback item.
+3. One pinned Slack inbox/index message that summarizes open items.
+
+For the pilot, prefer one GitHub issue in this repo per feedback item if issue creation is available.
+
+If issue creation is not available, maintain a durable record in the repo or available agent state.
+
+Slack messages are presentation and triage UI, not the only source of truth.
+
+## Slack triage structure
+
+Use one pinned inbox/index message in the triage channel called:
+
+"Evo Feedback Inbox"
+
+The pinned inbox message should list active/open items grouped by status:
+
+- New
+- In progress
+- Done recently
+- Discarded recently
+
+Each row should include:
+
+- feedback ID
+- short title
+- status
+- link to individual item thread/message
+- link to durable record if available
+
+Create one individual Slack message/thread per feedback item.
+
+Each individual item message should include:
+
+- ID
+- short title
+- status
+- area
+- feature
+- ease
+- relevance
+- seen count
+- source permalink(s)
+- why surfaced
+- durable record link if available
+
+## Reaction-based status updates
+
+Humans change feedback status by reacting to the individual feedback item message.
+
+Only treat reactions on individual feedback item messages as status changes.
+
+Do not treat reactions on the pinned inbox/index message as item-level status changes.
+
+Reaction mapping:
+
+- `:x:` means `discarded`
+- `:eyes:` means `in-progress`
+- `:white_check_mark:` means `done`
+
+When a status reaction is detected:
+
+1. Identify the feedback item ID from the message.
+2. Update the durable record.
+3. Append an audit entry with actor, reaction, old status, new status, and timestamp.
+4. Update the individual item message status.
+5. Update the pinned inbox/index message.
+
+If multiple status reactions exist, use the most recent valid status-changing reaction.
+
+If two people apply conflicting status reactions, preserve the audit trail and prefer the latest reaction.
+
+If a user removes a reaction, do not automatically revert status unless explicitly instructed.
+
+## Audit history
+
+Every status change should record:
+
+- feedback ID
+- previous status
+- new status
+- actor
+- timestamp
+- optional reason
+
+## Output style
+
+Be concise.
+
+Each feedback item should be short and user-facing.
+
+Do not include long root-cause explanations.
+
+Do not include deal details, internal team plans, or engineering speculation unless essential to understanding the user-facing issue.
+
+Prefer this framing:
 
 "Users cannot tell why Evo hides tenant-scoped data when a Group is selected."
 
-Bad:
+Avoid this framing:
 
 "Only AI-SPM assets carry a Group ID, while COS targets and machines are tenant-scoped."
 
-Good:
+## Initial scan output format
 
-"During demos, MCP allowlisting is confusing because the same server appears as several separate entries."
+When asked to scan, use this format:
 
-Bad:
+## Evo Feedback Inbox
 
-"Different install paths and shell wrappers prevent binary identity normalization."
+### New
+
+1. **<short user-facing problem>**
+   - ID: EVO-FB-001
+   - Area: <area>
+   - Feature: <feature>
+   - Ease: <easy|medium|hard|unknown>
+   - Relevance: <high|medium|low>
+   - Seen: <number>
+   - Why surfaced: <short reason>
+   - Source: <Slack permalink(s)>
+
+### Maybe product feedback
+
+List lower-confidence items here.
+
+### Ignored
+
+Briefly summarize categories of ignored messages, but do not list every ignored message.
+
+## Safety rules
+
+Do not create Linear issues unless explicitly asked.
+
+Do not launch coding agents unless explicitly asked.
+
+Do not post in source channels unless explicitly asked.
+
+Do not scan channels other than the allowlisted source channel.
+
+Do not expose private channel contents beyond concise feedback summaries and permalinks in the triage destination.
+
+If you cannot create GitHub issues, pin Slack messages, update Slack messages, or monitor reactions, say so clearly and produce the proposed output instead of pretending the action succeeded.
