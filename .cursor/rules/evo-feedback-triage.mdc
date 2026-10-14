@@ -194,9 +194,30 @@ Each individual item message should include:
 - ease
 - relevance
 - seen count
-- source permalink(s)
+- source link(s)
 - why surfaced
 - durable record link if available
+
+## Source link handling
+
+Keep Slack output compact.
+
+Do not paste full source message text.
+
+Do not include large quoted excerpts from Slack threads.
+
+Do not include Slack link previews or unfurled message previews if avoidable.
+
+Use labeled source links instead of raw visible URLs.
+
+Preferred Slack source format:
+
+- Source: <SLACK_PERMALINK_1|thread 1>
+- Source: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
+
+If the Slack API supports it, post messages with link unfurling disabled.
+
+If link unfurling cannot be disabled, still use labeled links and avoid pasting any long source content.
 
 ## Reaction-based status updates
 
@@ -271,7 +292,7 @@ When asked to scan, use this format:
    - Relevance: <high|medium|low>
    - Seen: <number>
    - Why surfaced: <short reason>
-   - Source: <Slack permalink(s)>
+   - Source: <SLACK_PERMALINK_1|thread 1>
 
 ### Maybe product feedback
 
@@ -293,4 +314,4 @@ Do not scan channels other than the allowlisted source channel.
 
 Do not expose private channel contents beyond concise feedback summaries and permalinks in the triage destination.
 
-If you cannot create GitHub issues, pin Slack messages, update Slack messages, or monitor reactions, say so clearly and produce the proposed output instead of pretending the action succeeded.
+If you cannot create GitHub issues, pin Slack messages, update Slack messages, disable link unfurling, or monitor reactions, say so clearly and produce the proposed output instead of pretending the action succeeded.
