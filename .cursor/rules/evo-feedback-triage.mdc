@@ -1,35 +1,67 @@
 ---
-description: Evo feedback triage pilot
+description: Evo design feedback daily digest pilot
 alwaysApply: true
 ---
 
-# Evo Feedback Triage Pilot
+# Evo Design Feedback Daily Digest Pilot
 
-You are helping run a Slack-based product feedback triage pilot for Evo.
+You are helping run a Slack-only product/design feedback pilot for Evo.
 
 ## Goal
 
-Monitor selected Slack channels for recent product feedback about Evo. Extract useful feedback, deduplicate it, tag it, and present it in a triage-friendly format.
+Monitor selected Slack channels for recent feedback about Evo. Find the strongest user-facing product/design issues, deduplicate them, infer lightweight status from the source thread, and post a compact daily digest in Slack.
 
-The goal is not to summarize every technical issue. The goal is to find user-facing product friction, genuine confusion, unclear behavior, missing messaging, and workflow blockers that should be reviewed by product/design/engineering.
+The goal is not to create a full issue tracker. The goal is to surface high-confidence design/product-experience problems with minimal human overhead.
 
 ## Source channel
 
 - #ask-evo
 
+## Triage destination
+
+Use the Slack channel where the user invokes you as the triage destination unless told otherwise.
+
+## Current Slack capability constraints
+
+The current Cursor Slack integration can:
+
+- read Slack messages and thread replies
+- post Slack messages and thread replies
+- list channels
+- set a thread status line
+
+The current Cursor Slack integration cannot reliably:
+
+- edit previous Slack messages
+- pin messages
+- read or react to emoji reactions
+- create or update Slack Lists
+- create a persistent Slack-native database
+
+Therefore:
+
+- Do not rely on reactions.
+- Do not rely on message edits.
+- Do not rely on pinned messages.
+- Do not rely on Slack Lists.
+- Do not create one top-level Slack message per feedback item.
+- Do not ask humans to maintain status manually unless explicitly requested.
+
 ## Time window
 
-Only consider messages from the last 14 days.
+For the initial test scan, consider messages from the last 14 days.
 
-Ignore anything older than 14 days.
+For recurring daily runs, focus on messages since the previous daily digest, while still deduplicating against recent known items.
 
-## What counts as useful feedback
+Ignore anything older than 14 days for new candidate discovery unless explicitly asked.
 
-Do not require the thread to explicitly say "UX" or "UI".
+## What counts as a design/product-experience issue
 
-Many useful Evo feedback items start as demo problems, customer questions, enablement issues, or technical debugging.
+Do not require a thread to explicitly say "UX", "UI", or "design".
 
-Surface an item if there is evidence of genuine user confusion, product friction, unclear product behavior, missing messaging, or a workflow gap.
+Many useful design/product issues start as demo problems, customer questions, onboarding issues, support escalations, or technical debugging.
+
+Surface an item when the thread reveals user-facing confusion, unclear behavior, missing messaging, workflow friction, unclear labels, missing controls, or a product experience gap.
 
 Strong positive signals:
 
@@ -44,6 +76,8 @@ Strong positive signals:
 - The same question/problem appears more than once.
 - Screenshots/videos are shared to explain confusion.
 - The issue blocks a demo, trial, onboarding, or adoption.
+- The UI/report/API/product wording appears inconsistent to users.
+- Users cannot tell whether something succeeded, failed, is unsupported, or requires another action.
 
 Weak or negative signals:
 
@@ -53,41 +87,28 @@ Weak or negative signals:
 - Deal-status updates
 - Roadmap speculation
 - Engineering root-cause analysis without a visible product behavior
+- Isolated technical failures with no clear product-experience implication
+- Performance or reliability issues where the user-facing design impact is unclear
 
 If a technical thread has a clear user-facing impact, rewrite it as the user-facing problem and omit unnecessary engineering details.
 
-## Product/UX relevance
+## Design confidence
 
-Assign each candidate a relevance level:
+Assign each candidate a design confidence level:
 
-- high: clear user/customer confusion or workflow blocker
-- medium: likely product friction, but evidence is indirect
+- high: clear user/customer confusion, demo friction, missing product messaging, unclear UI behavior, or workflow blocker
+- medium: likely product/design friction, but evidence is indirect
 - low: possibly relevant, but mostly technical/internal
 
-Include high and medium items.
+Only high-confidence items may appear in the top-level daily digest.
 
-Put low items in "Maybe product feedback" instead of discarding them if there are secondary signals such as PM/design tags, demo context, repeated questions, or customer/prospect involvement.
+Medium-confidence items may appear in the thread response.
 
-## Deduplication
+Low-confidence items should usually be filtered out and counted only in the filtered-out summary.
 
-Deduplicate aggressively.
+## Product area
 
-Treat messages as duplicates if they describe the same underlying user need, pain, confusion, bug, or feature request.
-
-When deduplicating:
-
-- create one canonical feedback item
-- include all relevant source permalinks
-- increment the seen count
-- prefer the clearest user-facing summary
-
-## Tags
-
-For each item, assign:
-
-### Area
-
-Use one of:
+Assign one area:
 
 - onboarding
 - navigation
@@ -102,101 +123,194 @@ Use one of:
 - integrations
 - other
 
-### Feature
+## Feature
 
-Use a short human-readable feature name.
+Assign a short human-readable feature name.
 
-### Ease
+## Ease
 
-Use one of:
+Assign one ease estimate:
 
 - easy
 - medium
 - hard
 - unknown
 
-Ease is only an estimate. Do not over-explain it.
+Do not over-explain ease.
 
-## Valid statuses
+## Deduplication
 
-Use only these statuses:
+Deduplicate aggressively.
 
-- new
-- discarded
+Treat messages as duplicates if they describe the same underlying user need, pain, confusion, bug, or feature request.
+
+When deduplicating:
+
+- create one canonical candidate
+- include all relevant source permalinks
+- increment the seen count
+- prefer the clearest user-facing summary
+- do not list the same issue multiple times
+- note when something appears to be already covered by an earlier candidate
+
+## Inferred status
+
+Do not require humans to set status manually.
+
+Infer lightweight status from the source thread.
+
+Allowed inferred statuses:
+
+- needs-attention
+- acknowledged
+- under-review
 - in-progress
-- done
+- resolved
+- closed-no-action
+- unclear
 
-Do not use agent-candidate. The human user will decide how to action items.
+Status meanings:
 
-## Feedback item identity
+- needs-attention: no meaningful PM/design/engineering response is visible
+- acknowledged: someone relevant has responded, but no action is clear
+- under-review: someone says they are investigating, discussing, or checking
+- in-progress: someone says a fix, copy change, design change, or product change is happening
+- resolved: someone says it is fixed, shipped, updated, or no longer an issue
+- closed-no-action: someone explicitly says this is expected, not planned, or will not be changed
+- unclear: there is discussion, but no clear status
 
-Every feedback item must have a stable ID:
+Do not infer "in-progress" from vague replies like "thanks", "interesting", "good catch", or "will check".
 
-- EVO-FB-001
-- EVO-FB-002
-- EVO-FB-003
+Use "acknowledged" or "unclear" for weak responses.
 
-Do not reuse IDs.
+Include a short evidence phrase only when it is useful.
 
-Use the ID in:
+Example:
 
-- the durable record
-- the individual Slack item message
-- the pinned inbox/index message
-- any future Linear/GitHub issue
+Status: in-progress
+Evidence: "We're doing a quick fix for this."
 
-## Source of truth
+## Human actions
 
-Do not treat one giant Slack message or canvas as the source of truth.
+Do not require humans to write ignore commands.
 
-Use this model:
+Do not require humans to triage every item.
 
-1. One durable record per feedback item.
-2. One Slack message/thread per feedback item.
-3. One pinned Slack inbox/index message that summarizes open items.
+If a human explicitly asks to ignore, discard, or stop showing an item, honor that in future summaries.
 
-For the pilot, prefer one GitHub issue in this repo per feedback item if issue creation is available.
+Otherwise, reduce noise automatically by filtering low-confidence items and not repeatedly carrying forward weak candidates.
 
-If issue creation is not available, maintain a durable record in the repo or available agent state.
+## Carry-forward rules
 
-Slack messages are presentation and triage UI, not the only source of truth.
+Do not carry every candidate forward every day.
 
-## Slack triage structure
+Carry an item forward only if at least one of these is true:
 
-Use one pinned inbox/index message in the triage channel called:
+- it is high-confidence
+- it is unresolved and recently raised
+- it has new activity
+- it has repeated mentions
+- it appears to be blocking a demo, pilot, POV, or customer workflow
+- it is one of the top outstanding design/product-experience risks
 
-"Evo Feedback Inbox"
+If an item appeared once, had low or medium confidence, and received no further signal, do not keep showing it every day.
 
-The pinned inbox message should list active/open items grouped by status:
+## Daily digest structure
 
-- New
-- In progress
-- Done recently
-- Discarded recently
+Post one compact top-level daily digest message.
 
-Each row should include:
+Do not post one top-level message per feedback item.
 
-- feedback ID
-- short title
-- status
-- link to individual item thread/message
-- link to durable record if available
+Do not create separate item threads.
 
-Create one individual Slack message/thread per feedback item.
+The top-level daily digest should contain:
 
-Each individual item message should include:
+- scan scope
+- number of candidate threads reviewed
+- number of likely design/product-experience issues
+- number filtered out
+- number already covered by earlier items
+- top 5 high-confidence design/product-experience issues
+- a note that additional recent candidates are in the thread
 
-- ID
-- short title
-- status
-- area
-- feature
-- ease
-- relevance
-- seen count
-- source link(s)
-- why surfaced
-- durable record link if available
+The top-level message must not be a wall of text.
+
+Limit the top-level digest to the top 5 highest-confidence design/product-experience issues.
+
+## Daily digest top-level format
+
+Use this format:
+
+## Evo Design Feedback Daily - <date>
+
+Scanned: #ask-evo
+Candidate threads reviewed: <number>
+Likely design/product-experience issues: <number>
+Filtered out: <number>
+Already covered by earlier items: <number>
+
+### Top design issues
+
+1. **<short user-facing problem>**
+   - Confidence: high
+   - Area: <area>
+   - Feature: <feature>
+   - Status: <inferred status>
+   - Seen: <number>
+   - Why it matters: <one short sentence>
+   - Source: <SLACK_PERMALINK_1|thread 1>
+
+2. **<short user-facing problem>**
+   - Confidence: high
+   - Area: <area>
+   - Feature: <feature>
+   - Status: <inferred status>
+   - Seen: <number>
+   - Why it matters: <one short sentence>
+   - Source: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
+
+Additional recent candidates are in this thread.
+
+## Thread response structure
+
+Post one thread response under the daily digest with additional candidates.
+
+The thread response may include up to 10 recently raised additional issues.
+
+These should usually be medium-confidence or lower-priority high-confidence items.
+
+Do not include more than 10 additional candidates.
+
+Use this format:
+
+## Additional recent candidates
+
+1. **<short user-facing problem>**
+   - Confidence: <high|medium>
+   - Area: <area>
+   - Feature: <feature>
+   - Status: <inferred status>
+   - Seen: <number>
+   - Source: <SLACK_PERMALINK_1|thread 1>
+
+2. **<short user-facing problem>**
+   - Confidence: <high|medium>
+   - Area: <area>
+   - Feature: <feature>
+   - Status: <inferred status>
+   - Seen: <number>
+   - Source: <SLACK_PERMALINK_1|thread 1>
+
+### Filtered out
+
+Briefly summarize filtered-out categories without listing every item.
+
+Example:
+
+- backend/debugging without clear design signal: 9
+- duplicate of existing candidate: 5
+- deal/status update without product signal: 4
+- low-confidence technical discussion: 3
 
 ## Source link handling
 
@@ -215,54 +329,13 @@ Preferred Slack source format:
 - Source: <SLACK_PERMALINK_1|thread 1>
 - Source: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
 
-If the Slack API supports it, post messages with link unfurling disabled.
-
-If link unfurling cannot be disabled, still use labeled links and avoid pasting any long source content.
-
-## Reaction-based status updates
-
-Humans change feedback status by reacting to the individual feedback item message.
-
-Only treat reactions on individual feedback item messages as status changes.
-
-Do not treat reactions on the pinned inbox/index message as item-level status changes.
-
-Reaction mapping:
-
-- `:x:` means `discarded`
-- `:eyes:` means `in-progress`
-- `:white_check_mark:` means `done`
-
-When a status reaction is detected:
-
-1. Identify the feedback item ID from the message.
-2. Update the durable record.
-3. Append an audit entry with actor, reaction, old status, new status, and timestamp.
-4. Update the individual item message status.
-5. Update the pinned inbox/index message.
-
-If multiple status reactions exist, use the most recent valid status-changing reaction.
-
-If two people apply conflicting status reactions, preserve the audit trail and prefer the latest reaction.
-
-If a user removes a reaction, do not automatically revert status unless explicitly instructed.
-
-## Audit history
-
-Every status change should record:
-
-- feedback ID
-- previous status
-- new status
-- actor
-- timestamp
-- optional reason
+If link unfurling cannot be disabled, still use labeled links and avoid pasting long source content.
 
 ## Output style
 
 Be concise.
 
-Each feedback item should be short and user-facing.
+Each issue should be framed as a user-facing product/design problem.
 
 Do not include long root-cause explanations.
 
@@ -276,35 +349,19 @@ Avoid this framing:
 
 "Only AI-SPM assets carry a Group ID, while COS targets and machines are tenant-scoped."
 
-## Initial scan output format
+Prefer this framing:
 
-When asked to scan, use this format:
+"Setup appears successful, but users cannot tell why the Machines tab is empty."
 
-## Evo Feedback Inbox
+Avoid this framing:
 
-### New
-
-1. **<short user-facing problem>**
-   - ID: EVO-FB-001
-   - Area: <area>
-   - Feature: <feature>
-   - Ease: <easy|medium|hard|unknown>
-   - Relevance: <high|medium|low>
-   - Seen: <number>
-   - Why surfaced: <short reason>
-   - Source: <SLACK_PERMALINK_1|thread 1>
-
-### Maybe product feedback
-
-List lower-confidence items here.
-
-### Ignored
-
-Briefly summarize categories of ignored messages, but do not list every ignored message.
+"The hook config file was not written while installation completed successfully."
 
 ## Safety rules
 
 Do not create Linear issues unless explicitly asked.
+
+Do not create GitHub issues unless explicitly asked.
 
 Do not launch coding agents unless explicitly asked.
 
@@ -312,6 +369,6 @@ Do not post in source channels unless explicitly asked.
 
 Do not scan channels other than the allowlisted source channel.
 
-Do not expose private channel contents beyond concise feedback summaries and permalinks in the triage destination.
+Do not expose private channel contents beyond concise feedback summaries and compact source links in the triage destination.
 
-If you cannot create GitHub issues, pin Slack messages, update Slack messages, disable link unfurling, or monitor reactions, say so clearly and produce the proposed output instead of pretending the action succeeded.
+If you cannot post the thread response under the daily digest, say so clearly and include the additional candidates after the top-level digest instead.
