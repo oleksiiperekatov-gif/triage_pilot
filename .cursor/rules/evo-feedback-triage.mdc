@@ -11,7 +11,7 @@ You are helping run a Slack-only product/design feedback pilot for Evo.
 
 Monitor selected Slack channels for recent feedback about Evo. Find the strongest user-facing product/design issues, deduplicate them, infer lightweight status from the source thread, and post a compact daily digest in Slack.
 
-The goal is not to create a full issue tracker. The goal is to surface high-confidence design/product-experience problems with minimal human overhead.
+The digest should be useful to humans at a glance. Do not expose internal classification metadata unless it is necessary.
 
 ## Source channel
 
@@ -94,7 +94,9 @@ If a technical thread has a clear user-facing impact, rewrite it as the user-fac
 
 ## Design confidence
 
-Assign each candidate a design confidence level:
+Use design confidence internally to rank and filter candidates.
+
+Confidence levels:
 
 - high: clear user/customer confusion, demo friction, missing product messaging, unclear UI behavior, or workflow blocker
 - medium: likely product/design friction, but evidence is indirect
@@ -106,37 +108,22 @@ Medium-confidence items may appear in the thread response.
 
 Low-confidence items should usually be filtered out and counted only in the filtered-out summary.
 
-## Product area
+Do not show the confidence label in the top-level digest unless explicitly asked.
 
-Assign one area:
+## Internal classification
 
-- onboarding
-- navigation
-- permissions
-- settings
-- reporting
-- error-message
-- terminology
-- workflow
-- discoverability
-- reliability
-- integrations
-- other
+You may internally classify each item by:
 
-## Feature
+- area
+- feature
+- ease
+- confidence
+- inferred status
+- seen count
 
-Assign a short human-readable feature name.
+But do not show all of those fields in the Slack digest.
 
-## Ease
-
-Assign one ease estimate:
-
-- easy
-- medium
-- hard
-- unknown
-
-Do not over-explain ease.
+Only include metadata if it helps the reader understand what to do.
 
 ## Deduplication
 
@@ -148,7 +135,7 @@ When deduplicating:
 
 - create one canonical candidate
 - include all relevant source permalinks
-- increment the seen count
+- increment the seen count internally
 - prefer the clearest user-facing summary
 - do not list the same issue multiple times
 - note when something appears to be already covered by an earlier candidate
@@ -183,12 +170,15 @@ Do not infer "in-progress" from vague replies like "thanks", "interesting", "goo
 
 Use "acknowledged" or "unclear" for weak responses.
 
-Include a short evidence phrase only when it is useful.
+In the digest, include status only when useful.
 
-Example:
+Good:
 
-Status: in-progress
-Evidence: "We're doing a quick fix for this."
+Status: acknowledged
+
+Avoid:
+
+Status: acknowledged because PM said the thing is not a bug but confusing and maybe messaging is being considered.
 
 ## Human actions
 
@@ -225,17 +215,13 @@ Do not create separate item threads.
 
 The top-level daily digest should contain:
 
-- scan scope
-- number of candidate threads reviewed
-- number of likely design/product-experience issues
-- number filtered out
-- number already covered by earlier items
+- scan scope and short counts
 - top 5 high-confidence design/product-experience issues
 - a note that additional recent candidates are in the thread
 
 The top-level message must not be a wall of text.
 
-Limit the top-level digest to the top 5 highest-confidence design/product-experience issues.
+Do not expose internal metadata fields like confidence, area, feature, ease, or seen count in the top-level digest by default.
 
 ## Daily digest top-level format
 
@@ -243,31 +229,13 @@ Use this format:
 
 ## Evo Design Feedback Daily - <date>
 
-Scanned: #ask-evo
-Candidate threads reviewed: <number>
-Likely design/product-experience issues: <number>
-Filtered out: <number>
-Already covered by earlier items: <number>
+Scanned #ask-evo. Reviewed <number> candidate threads; found <number> likely design/product-experience issues. Filtered out <number> mostly technical, duplicate, or low-confidence threads.
 
 ### Top design issues
 
-1. **<short user-facing problem>**
-   - Confidence: high
-   - Area: <area>
-   - Feature: <feature>
-   - Status: <inferred status>
-   - Seen: <number>
-   - Why it matters: <one short sentence>
-   - Source: <SLACK_PERMALINK_1|thread 1>
+1. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <SLACK_PERMALINK_1|thread 1>.
 
-2. **<short user-facing problem>**
-   - Confidence: high
-   - Area: <area>
-   - Feature: <feature>
-   - Status: <inferred status>
-   - Seen: <number>
-   - Why it matters: <one short sentence>
-   - Source: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
+2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Sources: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>.
 
 Additional recent candidates are in this thread.
 
@@ -281,25 +249,15 @@ These should usually be medium-confidence or lower-priority high-confidence item
 
 Do not include more than 10 additional candidates.
 
+Do not show every internal metadata field.
+
 Use this format:
 
 ## Additional recent candidates
 
-1. **<short user-facing problem>**
-   - Confidence: <high|medium>
-   - Area: <area>
-   - Feature: <feature>
-   - Status: <inferred status>
-   - Seen: <number>
-   - Source: <SLACK_PERMALINK_1|thread 1>
+1. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <SLACK_PERMALINK_1|thread 1>.
 
-2. **<short user-facing problem>**
-   - Confidence: <high|medium>
-   - Area: <area>
-   - Feature: <feature>
-   - Status: <inferred status>
-   - Seen: <number>
-   - Source: <SLACK_PERMALINK_1|thread 1>
+2. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <SLACK_PERMALINK_1|thread 1>.
 
 ### Filtered out
 
@@ -307,10 +265,7 @@ Briefly summarize filtered-out categories without listing every item.
 
 Example:
 
-- backend/debugging without clear design signal: 9
-- duplicate of existing candidate: 5
-- deal/status update without product signal: 4
-- low-confidence technical discussion: 3
+Filtered out mostly backend/debugging threads, duplicates of existing candidates, deal/status updates without product signal, and low-confidence technical discussions.
 
 ## Source link handling
 
@@ -327,7 +282,7 @@ Use labeled source links instead of raw visible URLs.
 Preferred Slack source format:
 
 - Source: <SLACK_PERMALINK_1|thread 1>
-- Source: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
+- Sources: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
 
 If link unfurling cannot be disabled, still use labeled links and avoid pasting long source content.
 
@@ -341,17 +296,21 @@ Do not include long root-cause explanations.
 
 Do not include deal details, internal team plans, or engineering speculation unless essential to understanding the user-facing issue.
 
+Do not output bullet lists of metadata for each issue in the top-level digest.
+
+Prefer one compact paragraph per issue.
+
 Prefer this framing:
 
-"Users cannot tell why Evo hides tenant-scoped data when a Group is selected."
+"Group selector makes data look missing during POVs. Customers read this as a bug; the thread suggests in-product messaging may be needed."
 
 Avoid this framing:
 
-"Only AI-SPM assets carry a Group ID, while COS targets and machines are tenant-scoped."
+"Confidence: high. Area: navigation. Feature: Group selector. Status: acknowledged. Seen: 2. Why it matters: Data silently vanishes during POVs and demos."
 
 Prefer this framing:
 
-"Setup appears successful, but users cannot tell why the Machines tab is empty."
+"Setup appears successful, but the Machines tab is empty. Users cannot tell whether setup failed, whether data is delayed, or whether another action is required."
 
 Avoid this framing:
 
