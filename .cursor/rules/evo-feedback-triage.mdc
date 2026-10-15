@@ -37,6 +37,7 @@ The current Cursor Slack integration cannot reliably:
 - read or react to emoji reactions
 - create or update Slack Lists
 - create a persistent Slack-native database
+- disable Slack link unfurling
 
 Therefore:
 
@@ -46,6 +47,7 @@ Therefore:
 - Do not rely on Slack Lists.
 - Do not create one top-level Slack message per feedback item.
 - Do not ask humans to maintain status manually unless explicitly requested.
+- Keep source links compact and avoid unnecessary links.
 
 ## Time window
 
@@ -134,7 +136,7 @@ Treat messages as duplicates if they describe the same underlying user need, pai
 When deduplicating:
 
 - create one canonical candidate
-- include all relevant source permalinks
+- include all relevant source permalinks internally
 - increment the seen count internally
 - prefer the clearest user-facing summary
 - do not list the same issue multiple times
@@ -223,6 +225,30 @@ The top-level message must not be a wall of text.
 
 Do not expose internal metadata fields like confidence, area, feature, ease, or seen count in the top-level digest by default.
 
+## Numbering
+
+Use continuous numbering across the top-level digest and the thread response.
+
+If the top-level digest lists items 1 through 5, the thread response must start with item 6.
+
+Do not restart numbering at 1 in the thread response.
+
+Example:
+
+Top-level digest:
+
+1. First top issue
+2. Second top issue
+3. Third top issue
+4. Fourth top issue
+5. Fifth top issue
+
+Thread response:
+
+6. First additional candidate
+7. Second additional candidate
+8. Third additional candidate
+
 ## Daily digest top-level format
 
 Use this format:
@@ -233,9 +259,9 @@ Scanned #ask-evo. Reviewed <number> candidate threads; found <number> likely des
 
 ### Top design issues
 
-1. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <SLACK_PERMALINK_1|thread 1>.
+1. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <source label or compact thread link>.
 
-2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Sources: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>.
+2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Sources: <source labels or compact thread links>.
 
 Additional recent candidates are in this thread.
 
@@ -251,13 +277,15 @@ Do not include more than 10 additional candidates.
 
 Do not show every internal metadata field.
 
-Use this format:
+Continue numbering from the top-level digest.
+
+Use this format if the top-level digest had 5 items:
 
 ## Additional recent candidates
 
-1. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <SLACK_PERMALINK_1|thread 1>.
+6. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <source label or compact thread link>.
 
-2. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <SLACK_PERMALINK_1|thread 1>.
+7. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <source label or compact thread link>.
 
 ### Filtered out
 
@@ -275,16 +303,16 @@ Do not paste full source message text.
 
 Do not include large quoted excerpts from Slack threads.
 
-Do not include Slack link previews or unfurled message previews if avoidable.
+Avoid unnecessary Slack links, because Slack may auto-unfurl them and create previews.
 
-Use labeled source links instead of raw visible URLs.
+If source links are included, use compact labels such as:
 
-Preferred Slack source format:
+- Source: thread 1
+- Sources: thread 1, thread 2
 
-- Source: <SLACK_PERMALINK_1|thread 1>
-- Sources: <SLACK_PERMALINK_1|thread 1>, <SLACK_PERMALINK_2|thread 2>
+If link previews become noisy, use source labels only and provide actual URLs only when explicitly asked.
 
-If link unfurling cannot be disabled, still use labeled links and avoid pasting long source content.
+Do not include screenshots, attachment previews, or long source excerpts in the digest.
 
 ## Output style
 
@@ -302,7 +330,7 @@ Prefer one compact paragraph per issue.
 
 Prefer this framing:
 
-"Group selector makes data look missing during POVs. Customers read this as a bug; the thread suggests in-product messaging may be needed."
+"Group selector makes data look missing during POVs. Customers read it as a bug; the thread suggests in-product messaging may be needed."
 
 Avoid this framing:
 
@@ -328,6 +356,6 @@ Do not post in source channels unless explicitly asked.
 
 Do not scan channels other than the allowlisted source channel.
 
-Do not expose private channel contents beyond concise feedback summaries and compact source links in the triage destination.
+Do not expose private channel contents beyond concise feedback summaries and compact source references in the triage destination.
 
 If you cannot post the thread response under the daily digest, say so clearly and include the additional candidates after the top-level digest instead.
