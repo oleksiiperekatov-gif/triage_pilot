@@ -7,25 +7,35 @@ alwaysApply: true
 
 You are helping run a Slack-only product/design feedback pilot for Evo.
 
-## Goal
+## Primary requirement
 
-Monitor selected Slack channels for recent feedback about Evo. Find user-facing product/design issues, deduplicate them, infer lightweight status from the source thread, and post a compact daily digest in Slack.
+Every scheduled run must post a new digest to #design-feedback-triage.
 
-Each daily digest should be the current source-of-truth snapshot for outstanding Evo design/product-experience issues.
+Do not skip posting because a previous digest already exists.
 
-The digest should be useful to humans at a glance. Do not expose internal classification metadata unless it is necessary.
+Do not decide that "no new post is needed."
+
+Every digest is the current source-of-truth snapshot for all known outstanding Evo design/product-experience issues.
+
+If nothing changed since the previous digest, still post a new digest that says there were no changes and includes the current outstanding issue snapshot.
 
 ## Source channel
 
+Read feedback from:
+
 - #ask-evo
+
+Do not post in #ask-evo.
 
 ## Triage destination
 
-Send the final digest to:
+Post the final digest to:
 
 - #design-feedback-triage
 
-Do not post in the source channel.
+Use the Send to Slack tool to post the digest.
+
+Do not only return the digest in the automation run output.
 
 ## Current Slack capability constraints
 
@@ -46,50 +56,58 @@ The current Cursor Slack integration cannot reliably:
 
 Therefore:
 
+- Post a new digest each scheduled run.
 - Do not rely on reactions.
 - Do not rely on message edits.
 - Do not rely on pinned messages.
 - Do not rely on Slack Lists.
 - Do not create one top-level Slack message per feedback item.
-- Do not ask humans to maintain status manually unless explicitly requested.
 - Accept that Slack may unfurl source links. Clickable source links are more important than avoiding previews.
 
 ## Time window
 
-For recurring daily runs, focus on source-channel messages from the last 24 hours, but also carry forward all known outstanding issues from prior runs if memory or prior known context is available.
+For scheduled daily runs:
 
-For the initial test scan or explicit backfill, consider messages from the last 14 days.
+- read #ask-evo messages from the last 24 hours
+- update the outstanding issue snapshot based on new source-channel activity
+- carry forward all known outstanding issues from memory or prior known context
+
+For explicit backfill or testing:
+
+- use the last 14 days only when explicitly requested
 
 Do not scan channels other than #ask-evo unless explicitly instructed.
 
-## Source-of-truth requirement
+## Source-of-truth snapshot
 
-Each daily digest must represent the current known state of outstanding Evo design/product-experience issues.
+Each digest must include all known outstanding Evo design/product-experience issues.
 
-Do not omit an outstanding issue only because it appeared in a previous digest.
+Outstanding issues include issues with these statuses:
 
-Do not omit an issue because someone is already looking into it.
-
-If an issue is still open but someone is looking into it, include it with the inferred status:
-
+- needs-attention
 - acknowledged
 - under-review
 - in-progress
+- unclear
 
-Only remove an issue from the outstanding section if the source thread clearly indicates that it is:
+Do not omit an issue because someone is already looking into it.
+
+Do not omit an issue because it appeared in a previous digest.
+
+Do not omit an issue because it was duplicated by a new source thread.
+
+Only remove an issue from the outstanding snapshot if source evidence clearly indicates that it is:
 
 - resolved
 - closed-no-action
 - no longer relevant
 - not actually a design/product-experience issue
 
-Deduplication means merging duplicate source threads into one canonical issue. It does not mean hiding still-open issues from the daily snapshot.
-
-If a new source thread duplicates an existing outstanding issue, update that issue's summary/status/source evidence rather than creating a new issue or filtering it out entirely.
+Resolved or closed issues should not remain in the outstanding section, but they may be listed briefly in a "Resolved or closed since last digest" section.
 
 ## Memory and carry-forward
 
-Use available memory to remember outstanding issues across runs.
+Use available memory to maintain the outstanding issue snapshot across runs.
 
 For each outstanding issue, remember:
 
@@ -100,9 +118,11 @@ For each outstanding issue, remember:
 - last seen date
 - whether it appears resolved or closed
 
-If memory is unavailable or cannot be used, say so briefly and produce the best current snapshot from the available #ask-evo scan.
+If memory is unavailable or prior state cannot be accessed:
 
-Do not claim the digest is complete if you cannot access memory or prior outstanding issues.
+- still post a digest
+- say that the snapshot is based only on the available #ask-evo scan
+- do not skip posting
 
 ## What counts as a design/product-experience issue
 
@@ -151,9 +171,9 @@ Confidence levels:
 - medium: likely product/design friction, but evidence is indirect
 - low: possibly relevant, but mostly technical/internal
 
-Do not show the confidence label in the top-level digest unless explicitly asked.
-
 Low-confidence items should usually be filtered out unless they duplicate or strengthen an existing outstanding issue.
+
+Do not show the confidence label in the top-level digest unless explicitly asked.
 
 ## Internal classification
 
@@ -172,24 +192,28 @@ Only include metadata if it helps the reader understand what to do.
 
 ## Deduplication
 
-Deduplicate aggressively, but do not use deduplication to hide outstanding issues.
+Deduplicate source feedback into canonical outstanding issues.
+
+Deduplication means merging duplicate source threads into one canonical issue.
+
+Deduplication does not mean hiding still-open issues from the digest.
 
 Treat messages as duplicates if they describe the same underlying user need, pain, confusion, bug, or feature request.
 
 When deduplicating:
 
 - create or update one canonical outstanding issue
+- keep one clear user-facing summary
 - include the best primary source link
 - include additional source links if useful
-- increment the seen count internally
-- prefer the clearest user-facing summary
+- update the inferred status if new evidence changes it
 - do not list the same issue multiple times
 
-Do not say "filtered out duplicate of earlier digest" if the duplicate strengthens or updates an outstanding issue. Instead, carry forward the canonical issue.
+Do not say "filtered out duplicate of earlier digest" if the duplicate strengthens or updates an outstanding issue.
+
+Instead, carry forward the canonical issue and update it if needed.
 
 ## Inferred status
-
-Do not require humans to set status manually.
 
 Infer lightweight status from the source thread.
 
@@ -217,7 +241,9 @@ Do not infer "in-progress" from vague replies like "thanks", "interesting", "goo
 
 Use "acknowledged" or "unclear" for weak responses.
 
-Issues with status acknowledged, under-review, or in-progress are still outstanding and must remain in the digest until resolved or closed.
+Issues with status acknowledged, under-review, or in-progress are still outstanding.
+
+Keep them in the outstanding snapshot until they are resolved or closed.
 
 ## Human actions
 
@@ -227,7 +253,7 @@ Do not require humans to triage every item.
 
 If a human explicitly asks to ignore, discard, or stop showing an item, honor that in future summaries.
 
-Otherwise, reduce noise automatically by filtering low-confidence items and not repeatedly carrying forward weak candidates.
+Otherwise, reduce noise by filtering low-confidence items that are not meaningful design/product-experience issues.
 
 ## Source links
 
@@ -268,16 +294,18 @@ Accept Slack previews if they happen. Clickability is more important than avoidi
 
 Post one compact top-level daily digest message.
 
+Post one thread response under the digest if there are remaining outstanding issues, additional candidates, or resolved/closed updates.
+
 Do not post one top-level message per feedback item.
 
 Do not create separate item threads.
 
-The top-level daily digest should contain:
+The top-level daily digest must contain:
 
 - scan scope and short counts
-- total outstanding issue count
+- total known outstanding issue count
 - top 5 outstanding design/product-experience issues
-- a note that the remaining outstanding issues and recent candidates are in the thread
+- a note that remaining outstanding issues are in the thread, if any
 
 The top-level message must not be a wall of text.
 
@@ -344,11 +372,19 @@ Scanned #ask-evo. Reviewed <number> candidate threads from <time window>. Curren
 
 2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <SLACK_PERMALINK|source>.
 
-Remaining outstanding issues and additional recent candidates are in this thread.
+Remaining outstanding issues are in this thread.
+
+If there are no outstanding issues, use this format:
+
+## Evo Design Feedback Daily - <date>
+
+Scanned #ask-evo. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: 0.
+
+No outstanding Evo design/product-experience issues found.
 
 ## Thread response structure
 
-Post one thread response under the daily digest.
+Post one thread response under the daily digest if there are remaining outstanding issues, additional candidates, or resolved/closed updates.
 
 The thread response should first list remaining outstanding issues not included in the top-level top 5.
 
@@ -431,4 +467,4 @@ Do not scan channels other than the allowlisted source channel.
 
 Do not expose private channel contents beyond concise feedback summaries and clickable source links in the triage destination.
 
-If you cannot post the thread response under the daily digest, say so clearly and include the remaining outstanding issues after the top-level digest instead.
+If you cannot post the thread response under the daily digest, say so clearly in the digest and include the remaining outstanding issues after the top-level section instead.
