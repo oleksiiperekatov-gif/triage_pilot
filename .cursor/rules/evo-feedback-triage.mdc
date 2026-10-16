@@ -19,16 +19,19 @@ The digest should be useful to humans at a glance. Do not expose internal classi
 
 ## Triage destination
 
-Use the Slack channel where the user invokes you as the triage destination unless told otherwise.
+Send the final digest to:
+
+- #design-feedback-triage
+
+Do not post in the source channel.
 
 ## Current Slack capability constraints
 
 The current Cursor Slack integration can:
 
-- read Slack messages and thread replies
+- read public Slack channels
 - post Slack messages and thread replies
-- list channels
-- set a thread status line
+- send messages to Slack channels
 
 The current Cursor Slack integration cannot reliably:
 
@@ -47,15 +50,17 @@ Therefore:
 - Do not rely on Slack Lists.
 - Do not create one top-level Slack message per feedback item.
 - Do not ask humans to maintain status manually unless explicitly requested.
-- Keep source links compact and avoid unnecessary links.
+- Accept that Slack may unfurl source links. Clickable source links are more important than avoiding previews.
 
 ## Time window
 
 For the initial test scan, consider messages from the last 14 days.
 
-For recurring daily runs, focus on messages since the previous daily digest, while still deduplicating against recent known items.
+For recurring daily runs, focus on messages from the last 24 hours unless explicitly instructed otherwise.
 
-Ignore anything older than 14 days for new candidate discovery unless explicitly asked.
+If asked to use the last 14 days, do so.
+
+Do not scan channels other than #ask-evo unless explicitly instructed.
 
 ## What counts as a design/product-experience issue
 
@@ -123,7 +128,7 @@ You may internally classify each item by:
 - inferred status
 - seen count
 
-But do not show all of those fields in the Slack digest.
+Do not show all of those fields in the Slack digest.
 
 Only include metadata if it helps the reader understand what to do.
 
@@ -174,14 +179,6 @@ Use "acknowledged" or "unclear" for weak responses.
 
 In the digest, include status only when useful.
 
-Good:
-
-Status: acknowledged
-
-Avoid:
-
-Status: acknowledged because PM said the thing is not a bug but confusing and maybe messaging is being considered.
-
 ## Human actions
 
 Do not require humans to write ignore commands.
@@ -206,6 +203,41 @@ Carry an item forward only if at least one of these is true:
 - it is one of the top outstanding design/product-experience risks
 
 If an item appeared once, had low or medium confidence, and received no further signal, do not keep showing it every day.
+
+## Source links
+
+Always include a clickable primary Slack source link for each listed issue.
+
+Use the label "source" for the primary source link.
+
+Use Slack link formatting when possible:
+
+- Source: <SLACK_PERMALINK|source>
+
+Do not replace source links with plain channel names, dates, or source labels.
+
+Do not output this as the only source:
+
+- Source: #ask-evo
+- Source: #ask-evo, Oct 14
+- Source: S1
+- Source: thread 1
+
+Those are not sufficient because the reader cannot jump directly to the problem.
+
+If multiple sources exist:
+
+- include one primary clickable source link in the top-level digest
+- include additional clickable source links in the thread response if helpful
+
+Use this format for multiple links:
+
+- Source: <SLACK_PERMALINK_1|source>
+- Additional sources: <SLACK_PERMALINK_2|source 2>, <SLACK_PERMALINK_3|source 3>
+
+Do not paste raw visible URLs if a labeled Slack link is possible.
+
+Accept Slack previews if they happen. Clickability is more important than avoiding previews.
 
 ## Daily digest structure
 
@@ -259,9 +291,9 @@ Scanned #ask-evo. Reviewed <number> candidate threads; found <number> likely des
 
 ### Top design issues
 
-1. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <source label or compact thread link>.
+1. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <SLACK_PERMALINK|source>.
 
-2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Sources: <source labels or compact thread links>.
+2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <inferred status>. Source: <SLACK_PERMALINK|source>.
 
 Additional recent candidates are in this thread.
 
@@ -283,9 +315,9 @@ Use this format if the top-level digest had 5 items:
 
 ## Additional recent candidates
 
-6. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <source label or compact thread link>.
+6. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <SLACK_PERMALINK|source>.
 
-7. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <source label or compact thread link>.
+7. **<short user-facing problem>.** <short reason it may matter>. Status: <inferred status>. Source: <SLACK_PERMALINK|source>.
 
 ### Filtered out
 
@@ -294,25 +326,6 @@ Briefly summarize filtered-out categories without listing every item.
 Example:
 
 Filtered out mostly backend/debugging threads, duplicates of existing candidates, deal/status updates without product signal, and low-confidence technical discussions.
-
-## Source link handling
-
-Keep Slack output compact.
-
-Do not paste full source message text.
-
-Do not include large quoted excerpts from Slack threads.
-
-Avoid unnecessary Slack links, because Slack may auto-unfurl them and create previews.
-
-If source links are included, use compact labels such as:
-
-- Source: thread 1
-- Sources: thread 1, thread 2
-
-If link previews become noisy, use source labels only and provide actual URLs only when explicitly asked.
-
-Do not include screenshots, attachment previews, or long source excerpts in the digest.
 
 ## Output style
 
@@ -356,6 +369,6 @@ Do not post in source channels unless explicitly asked.
 
 Do not scan channels other than the allowlisted source channel.
 
-Do not expose private channel contents beyond concise feedback summaries and compact source references in the triage destination.
+Do not expose private channel contents beyond concise feedback summaries and clickable source links in the triage destination.
 
 If you cannot post the thread response under the daily digest, say so clearly and include the additional candidates after the top-level digest instead.
