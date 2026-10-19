@@ -19,13 +19,14 @@ Every digest is the current source-of-truth snapshot for all known outstanding E
 
 If nothing changed since the previous digest, still post a new digest that says there were no changes and includes the current outstanding issue snapshot.
 
-## Source channel
+## Source channels
 
 Read feedback from:
 
 - #ask-evo
+- #p-evo-ui
 
-Do not post in #ask-evo.
+Do not post in #ask-evo nor in #p-evo-ui
 
 ## Triage destination
 
