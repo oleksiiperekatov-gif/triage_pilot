@@ -458,6 +458,43 @@ Avoid this framing:
 
 "The hook config file was not written while installation completed successfully."
 
+## Resolution check
+
+Before posting each digest, re-check the source threads for all remembered outstanding issues.
+
+For every outstanding issue:
+
+1. Read the primary source thread.
+2. Read additional source threads if available.
+3. Look for new replies indicating that the issue is fixed, resolved, shipped, addressed, no longer reproducing, intentionally closed, or no longer relevant.
+4. If such a reply exists, remove the issue from the outstanding digest.
+5. Update memory so the issue is no longer carried forward.
+
+Resolution signals include but not limited to:
+
+- "fixed"
+- "resolved"
+- "shipped"
+- "addressed"
+- "done"
+- "this is fixed"
+- "this should be fixed now"
+- "no longer an issue"
+- "no longer reproduces"
+- "rolled out"
+- "released"
+- "merged"
+- "we updated the copy"
+- "we changed the UI"
+- "we fixed this"
+- "this was already fixed"
+
+If a human explicitly says in the source thread that the issue is already fixed, treat it as resolved and do not include it in the outstanding digest.
+
+Do not keep an issue in the digest just because it was remembered from a previous run.
+
+Memory is not authoritative over newer source-thread replies. Source-thread replies are the latest evidence.
+
 ## Safety rules
 
 Do not create Linear issues unless explicitly asked.
