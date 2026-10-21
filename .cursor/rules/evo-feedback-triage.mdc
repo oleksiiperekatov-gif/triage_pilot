@@ -26,7 +26,7 @@ Read feedback from:
 - #ask-evo
 - #p-evo-ui
 
-Do not post in #ask-evo nor in #p-evo-ui
+Do not post in the source channels.
 
 ## Triage destination
 
@@ -69,15 +69,16 @@ Therefore:
 
 For scheduled daily runs:
 
-- read #ask-evo messages from the last 24 hours
+- read #ask-evo and #p-evo-ui messages from the last 24 hours
 - update the outstanding issue snapshot based on new source-channel activity
 - carry forward all known outstanding issues from memory or prior known context
+- re-check source threads for remembered outstanding issues before posting
 
 For explicit backfill or testing:
 
 - use the last 14 days only when explicitly requested
 
-Do not scan channels other than #ask-evo unless explicitly instructed.
+Do not scan channels other than #ask-evo and #p-evo-ui unless explicitly instructed.
 
 ## Source-of-truth snapshot
 
@@ -129,8 +130,129 @@ For each outstanding issue, remember:
 If memory is unavailable or prior state cannot be accessed:
 
 - still post a digest
-- say that the snapshot is based only on the available #ask-evo scan
+- say that the snapshot is based only on the available source-channel scan
 - do not skip posting
+
+Memory is not authoritative over newer source-thread replies.
+
+Source-thread replies are the latest evidence.
+
+## Resolution check
+
+Before posting each digest, re-check the source threads for all remembered outstanding issues.
+
+For every outstanding issue:
+
+1. Read the primary source thread.
+2. Read additional source threads if available.
+3. Decide whether the issue is still outstanding, being looked at, or truly resolved.
+4. Remove the issue from the outstanding digest only if the thread clearly says the issue is fixed, shipped, released, no longer reproducing, or intentionally closed.
+
+Do not treat active work as resolution.
+
+These mean the issue is still outstanding and should remain in the digest with status `being-looked-at`:
+
+- "we are looking into it"
+- "we are investigating"
+- "we are checking"
+- "we are working on it"
+- "we are fixing this"
+- "we are doing a quick fix"
+- "we have a fix in progress"
+- "we opened a ticket"
+- "we are discussing"
+- "we will update the copy"
+- "we plan to change this"
+- "PR is open"
+- "fix is being reviewed"
+
+These mean the issue can be removed from the outstanding digest as resolved or closed:
+
+- "fixed"
+- "this is fixed"
+- "this should be fixed now"
+- "resolved"
+- "shipped"
+- "released"
+- "rolled out"
+- "deployed"
+- "available now"
+- "no longer an issue"
+- "no longer reproduces"
+- "confirmed fixed"
+- "we updated the copy"
+- "we changed the UI"
+- "this was already fixed"
+- "closing this"
+- "not planned"
+- "expected behavior and no product change needed"
+
+A merged PR alone is not enough to mark the issue resolved unless the thread also says the change was shipped, released, deployed, or is available to users.
+
+If a human says the issue is being worked on, keep it in the digest with status `being-looked-at`.
+
+If a human says the issue is fixed, shipped, released, deployed, available, confirmed fixed, intentionally closed, or no longer relevant, remove it from the outstanding digest.
+
+Memory is not authoritative over newer source-thread replies. Source-thread replies are the latest evidence.
+
+## Thread-reading requirement
+
+Do not classify an issue from the parent Slack message alone.
+
+For every candidate issue, read the source thread replies before deciding whether it is a design/product-experience issue.
+
+Use the full thread to determine whether the underlying issue is:
+
+- a genuine design/product-experience issue
+- an unfinished setup or customer environment issue
+- a support/debugging issue
+- an implementation bug without design signal
+- a duplicate of an existing outstanding issue
+- already resolved or no longer relevant
+
+If the thread later clarifies that the issue is caused by incomplete installation, missing setup, environment-specific configuration, custom install paths, missing hooks, missing tenant configuration, or another operational/setup problem, do not include it as a design issue unless there is clear evidence of a product experience gap.
+
+## Unfinished setup and support-debugging filter
+
+Do not include unfinished setup or support-debugging threads as design issues by default.
+
+Filter out threads where the underlying problem appears to be:
+
+- setup was not completed
+- an installer did not run
+- a hook was not installed
+- the customer needs to reinstall
+- the environment has custom paths
+- tenant configuration is missing
+- entitlement or provisioning is missing
+- the team is asking for logs, tenant IDs, paths, or environment details
+- the discussion is mostly operational troubleshooting
+
+Example of a thread that should usually be filtered out:
+
+A customer installed ADS, the Machines tab is empty, the hook is not installed, the team asks them to reinstall or validate tenant/environment details, and the thread is mainly debugging why setup did not complete.
+
+This is likely an unfinished setup or support issue, not a design issue.
+
+Only include such a thread if the design/product-experience issue is clear, for example:
+
+- the product says setup succeeded when required pieces were not installed
+- the UI gives no explanation that setup is incomplete
+- the user cannot tell what step is missing
+- the product gives no recovery path
+- the error message is missing or misleading
+- the same setup confusion repeats across customers or demos
+- PM/design discussion in the thread indicates that in-product messaging, onboarding, or UI behavior should change
+
+If included, phrase it as the product experience gap, not the operational failure.
+
+Good:
+
+"Setup appears complete, but Evo does not explain that a required hook is missing."
+
+Bad:
+
+"The customer's hook was not installed and engineering is checking paths."
 
 ## What counts as a design/product-experience issue
 
@@ -166,6 +288,7 @@ Weak or negative signals:
 - Engineering root-cause analysis without a visible product behavior
 - Isolated technical failures with no clear product-experience implication
 - Performance or reliability issues where the user-facing design impact is unclear
+- Unfinished setup without evidence of confusing product messaging or UI behavior
 
 If a technical thread has a clear user-facing impact, rewrite it as the user-facing problem and omit unnecessary engineering details.
 
@@ -239,13 +362,15 @@ If someone says "we are looking into it", use:
 
 - being-looked-at
 
-If someone says "we are fixing this", "we are making a change", "we are doing a quick fix", or similar, still use:
+If someone says "we are fixing this", "we are doing a quick fix", "we have a fix in progress", or similar, use:
 
 - being-looked-at
 
 Do not use:
 
 - in-progress
+
+Do not remove the issue from the digest until the thread clearly says the fix is shipped, released, deployed, available, confirmed fixed, intentionally closed, or no longer relevant.
 
 If someone says the issue is fixed, shipped, resolved, expected behavior with no product change needed, intentionally closed, or no longer relevant, remove it from the outstanding digest.
 
@@ -372,7 +497,7 @@ Use this format:
 
 ## Evo Design Feedback Daily - <date>
 
-Scanned #ask-evo. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: <number>. New or updated in this run: <number>.
+Scanned #ask-evo and #p-evo-ui. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: <number>. New or updated in this run: <number>.
 
 ### Top outstanding issues
 
@@ -386,7 +511,7 @@ If there are no outstanding issues, use this format:
 
 ## Evo Design Feedback Daily - <date>
 
-Scanned #ask-evo. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: 0.
+Scanned #ask-evo and #p-evo-ui. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: 0.
 
 No outstanding Evo design/product-experience issues found.
 
@@ -422,7 +547,7 @@ Briefly summarize filtered-out categories without listing every item.
 
 Example:
 
-Filtered out mostly backend/debugging threads, deal/status updates without product signal, low-confidence technical discussions, and duplicates that were folded into outstanding issues.
+Filtered out mostly backend/debugging threads, unfinished setup/support-debugging threads, deal/status updates without product signal, low-confidence technical discussions, and duplicates that were folded into outstanding issues.
 
 Do not list resolved items here.
 
@@ -444,59 +569,19 @@ Prefer one compact paragraph per issue.
 
 Prefer this framing:
 
+"Setup appears complete, but Evo does not explain that a required hook is missing."
+
+Avoid this framing:
+
+"The customer's hook was not installed and engineering is checking paths."
+
+Prefer this framing:
+
 "Group selector makes data look missing during POVs. Customers read it as a bug; the thread suggests in-product messaging may be needed."
 
 Avoid this framing:
 
 "Confidence: high. Area: navigation. Feature: Group selector. Status: acknowledged. Seen: 2. Why it matters: Data silently vanishes during POVs and demos."
-
-Prefer this framing:
-
-"Setup appears successful, but the Machines tab is empty. Users cannot tell whether setup failed, whether data is delayed, or whether another action is required."
-
-Avoid this framing:
-
-"The hook config file was not written while installation completed successfully."
-
-## Resolution check
-
-Before posting each digest, re-check the source threads for all remembered outstanding issues.
-
-For every outstanding issue:
-
-1. Read the primary source thread.
-2. Read additional source threads if available.
-3. Look for new replies indicating that the issue is fixed, resolved, shipped, addressed, no longer reproducing, intentionally closed, or no longer relevant.
-4. If such a reply exists, remove the issue from the outstanding digest.
-5. Update memory so the issue is no longer carried forward.
-
-Resolution signals include but not limited to:
-
-- "fixed"
-- "on the way"
-- "resolved"
-- "shipped"
-- "addressed"
-- "done"
-- "this is being fixed"
-- "this should be fixed now"
-- "we are working on it"
-- "no longer an issue"
-- "no longer reproduces"
-- "rolled out"
-- "released"
-- "merged"
-- "we updated the copy"
-- "we changed the UI"
-- "we fixed this"
-- "this was already fixed"
-We are not looking for confirmation that this is already on production or fixed. We are looking for confirmation that the human is on it and being actively worked on.
-
-If a human explicitly says in the source thread that the issue is already fixed, treat it as resolved and do not include it in the outstanding digest.
-
-Do not keep an issue in the digest just because it was remembered from a previous run.
-
-Memory is not authoritative over newer source-thread replies. Source-thread replies are the latest evidence.
 
 ## Safety rules
 
@@ -508,7 +593,7 @@ Do not launch coding agents unless explicitly asked.
 
 Do not post in source channels unless explicitly asked.
 
-Do not scan channels other than the allowlisted source channel.
+Do not scan channels other than the allowlisted source channels.
 
 Do not expose private channel contents beyond concise feedback summaries and clickable source links in the triage destination.
 
