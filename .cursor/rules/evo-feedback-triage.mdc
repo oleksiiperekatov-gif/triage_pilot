@@ -473,12 +473,14 @@ For every outstanding issue:
 Resolution signals include but not limited to:
 
 - "fixed"
+- "on the way"
 - "resolved"
 - "shipped"
 - "addressed"
 - "done"
-- "this is fixed"
+- "this is being fixed"
 - "this should be fixed now"
+- "we are working on it"
 - "no longer an issue"
 - "no longer reproduces"
 - "rolled out"
@@ -488,6 +490,7 @@ Resolution signals include but not limited to:
 - "we changed the UI"
 - "we fixed this"
 - "this was already fixed"
+We are not looking for confirmation that this is already on production or fixed. We are looking for confirmation that the human is on it and being actively worked on.
 
 If a human explicitly says in the source thread that the issue is already fixed, treat it as resolved and do not include it in the outstanding digest.
 
