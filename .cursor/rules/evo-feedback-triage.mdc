@@ -1,11 +1,11 @@
 ---
-description: Evo design feedback daily digest pilot
+description: Evo UX design feedback daily digest pilot
 alwaysApply: true
 ---
 
-# Evo Design Feedback Daily Digest Pilot
+# Evo UX Design Feedback Daily Digest Pilot
 
-You are helping run a Slack-only product/design feedback pilot for Evo.
+You are helping run a Slack-only UX design feedback pilot for Evo.
 
 ## Primary requirement
 
@@ -15,9 +15,11 @@ Do not skip posting because a previous digest already exists.
 
 Do not decide that "no new post is needed."
 
-Every digest is the current source-of-truth snapshot for all known outstanding Evo design/product-experience issues.
+Every digest is the current source-of-truth snapshot for all known outstanding Evo UX-design-actionable issues.
 
-If nothing changed since the previous digest, still post a new digest that says there were no changes and includes the current outstanding issue snapshot.
+The digest is for UX/product design triage, not general product, support, reliability, roadmap, or engineering triage.
+
+If nothing changed since the previous digest, still post a new digest that says there were no changes and includes the current outstanding UX design issue snapshot.
 
 ## Source channels
 
@@ -70,8 +72,8 @@ Therefore:
 For scheduled daily runs:
 
 - read #ask-evo and #p-evo-ui messages from the last 24 hours
-- update the outstanding issue snapshot based on new source-channel activity
-- carry forward all known outstanding issues from memory or prior known context
+- update the outstanding UX design issue snapshot based on new source-channel activity
+- carry forward all known outstanding UX design issues from memory or prior known context
 - re-check source threads for remembered outstanding issues before posting
 
 For explicit backfill or testing:
@@ -82,9 +84,9 @@ Do not scan channels other than #ask-evo and #p-evo-ui unless explicitly instruc
 
 ## Source-of-truth snapshot
 
-Each digest must include all known outstanding Evo design/product-experience issues.
+Each digest must include all known outstanding Evo UX-design-actionable issues.
 
-Outstanding issues are unresolved issues that still require attention, clarification, design/product review, or follow-up.
+Outstanding issues are unresolved issues where UX/product design can materially improve the user experience.
 
 Visible statuses in the digest are only:
 
@@ -104,7 +106,7 @@ Do not omit an issue because it appeared in a previous digest.
 
 Do not omit an issue because it was duplicated by a new source thread.
 
-Only remove an issue from the outstanding snapshot if source evidence clearly indicates that it is resolved, intentionally closed, no longer relevant, or not actually a design/product-experience issue.
+Only remove an issue from the outstanding snapshot if source evidence clearly indicates that it is resolved, intentionally closed, no longer relevant, or not actually UX-design-actionable.
 
 Resolved issues should not appear in the digest.
 
@@ -114,17 +116,86 @@ Do not include a "resolved" section.
 
 Do not include a "closed" section.
 
+## UX-design-actionability gate
+
+Before including any issue, ask:
+
+Can a UX/product designer materially improve this by changing the UI, content, flow, information architecture, empty state, warning, discoverability, onboarding, error message, permissions explanation, report terminology, or recovery guidance?
+
+Include the issue only if the answer is yes.
+
+The issue should have a plausible design artifact, such as:
+
+- error message
+- empty state
+- warning or confirmation
+- setup/onboarding guidance
+- recovery flow
+- progress or status indicator
+- terminology/content change
+- information architecture change
+- discoverability improvement
+- permissions explanation
+- report/table/chart copy or structure
+- next-step guidance
+- docs or in-product help entry
+- disabled state explanation
+- validation message
+- affordance for cancel/retry/continue
+- clearer mapping between user action and product result
+
+If the main fix is backend logic, auth reliability, installer behavior, scan engine behavior, model accuracy, permissions implementation, product capability, packaging, support process, or roadmap prioritization, exclude it unless the thread also exposes a clear UX/design layer.
+
+## Include examples
+
+Include issues like:
+
+- users cannot tell why data is missing
+- setup appears complete but required steps are missing
+- an error does not say what failed or what to try next
+- a role or permission error does not name the required role
+- a destructive or risky action lacks a warning
+- terminology differs between UI and report
+- counts differ and users cannot reconcile them
+- a feature is not discoverable
+- a flow has no empty state or recovery path
+- users cannot tell whether the system is working, waiting, failed, unsupported, or misconfigured
+- users do not know what action to take next
+
+## Exclude examples
+
+Exclude issues where the primary problem is:
+
+- backend bug
+- auth timeout
+- reliability failure
+- installer failure
+- missing product capability
+- packaging/roadmap gap
+- unsupported platform
+- scan engine behavior
+- model/risk scoring accuracy
+- permission implementation
+- customer-specific setup
+- support debugging
+- internal investigation
+- sales/deal status
+- "can this be built?" roadmap discussion
+
+Unless there is a clear UX/design issue such as missing explanation, misleading success state, unclear error, missing warning, or missing next step.
+
 ## Memory and carry-forward
 
-Use available memory to maintain the outstanding issue snapshot across runs.
+Use available memory to maintain the outstanding UX design issue snapshot across runs.
 
-For each outstanding issue, remember:
+For each outstanding UX design issue, remember:
 
 - short problem statement
 - visible status
 - primary source link
 - additional source links if useful
 - last seen date
+- why it is UX-design-actionable
 - whether it appears resolved or closed
 
 If memory is unavailable or prior state cannot be accessed:
@@ -145,8 +216,8 @@ For every outstanding issue:
 
 1. Read the primary source thread.
 2. Read additional source threads if available.
-3. Decide whether the issue is still outstanding, being looked at, or truly resolved.
-4. Remove the issue from the outstanding digest only if the thread clearly says the issue is fixed, shipped, released, no longer reproducing, or intentionally closed.
+3. Decide whether the issue is still outstanding, being looked at, no longer UX-design-actionable, or truly resolved.
+4. Remove the issue from the outstanding digest only if the thread clearly says the issue is fixed, shipped, released, no longer reproducing, intentionally closed, or no longer UX-design-actionable.
 
 Do not treat active work as resolution.
 
@@ -191,7 +262,7 @@ A merged PR alone is not enough to mark the issue resolved unless the thread als
 
 If a human says the issue is being worked on, keep it in the digest with status `being-looked-at`.
 
-If a human says the issue is fixed, shipped, released, deployed, available, confirmed fixed, intentionally closed, or no longer relevant, remove it from the outstanding digest.
+If a human says the issue is fixed, shipped, released, deployed, available, confirmed fixed, intentionally closed, no longer relevant, or no longer UX-design-actionable, remove it from the outstanding digest.
 
 Memory is not authoritative over newer source-thread replies. Source-thread replies are the latest evidence.
 
@@ -199,22 +270,23 @@ Memory is not authoritative over newer source-thread replies. Source-thread repl
 
 Do not classify an issue from the parent Slack message alone.
 
-For every candidate issue, read the source thread replies before deciding whether it is a design/product-experience issue.
+For every candidate issue, read the source thread replies before deciding whether it is a UX-design-actionable issue.
 
 Use the full thread to determine whether the underlying issue is:
 
-- a genuine design/product-experience issue
+- a genuine UX-design-actionable issue
 - an unfinished setup or customer environment issue
 - a support/debugging issue
-- an implementation bug without design signal
+- an implementation bug without UX design signal
+- a product capability or roadmap issue
 - a duplicate of an existing outstanding issue
 - already resolved or no longer relevant
 
-If the thread later clarifies that the issue is caused by incomplete installation, missing setup, environment-specific configuration, custom install paths, missing hooks, missing tenant configuration, or another operational/setup problem, do not include it as a design issue unless there is clear evidence of a product experience gap.
+If the thread later clarifies that the issue is caused by incomplete installation, missing setup, environment-specific configuration, custom install paths, missing hooks, missing tenant configuration, or another operational/setup problem, do not include it as a UX design issue unless there is clear evidence of a design layer.
 
 ## Unfinished setup and support-debugging filter
 
-Do not include unfinished setup or support-debugging threads as design issues by default.
+Do not include unfinished setup or support-debugging threads as UX design issues by default.
 
 Filter out threads where the underlying problem appears to be:
 
@@ -232,9 +304,9 @@ Example of a thread that should usually be filtered out:
 
 A customer installed ADS, the Machines tab is empty, the hook is not installed, the team asks them to reinstall or validate tenant/environment details, and the thread is mainly debugging why setup did not complete.
 
-This is likely an unfinished setup or support issue, not a design issue.
+This is likely an unfinished setup or support issue, not a UX design issue.
 
-Only include such a thread if the design/product-experience issue is clear, for example:
+Only include such a thread if the UX design issue is clear, for example:
 
 - the product says setup succeeded when required pieces were not installed
 - the UI gives no explanation that setup is incomplete
@@ -244,7 +316,7 @@ Only include such a thread if the design/product-experience issue is clear, for 
 - the same setup confusion repeats across customers or demos
 - PM/design discussion in the thread indicates that in-product messaging, onboarding, or UI behavior should change
 
-If included, phrase it as the product experience gap, not the operational failure.
+If included, phrase it as the UX/design gap, not the operational failure.
 
 Good:
 
@@ -254,13 +326,13 @@ Bad:
 
 "The customer's hook was not installed and engineering is checking paths."
 
-## What counts as a design/product-experience issue
+## What counts as a UX-design-actionable issue
 
 Do not require a thread to explicitly say "UX", "UI", or "design".
 
-Many useful design/product issues start as demo problems, customer questions, onboarding issues, support escalations, or technical debugging.
+Many useful UX design issues start as demo problems, customer questions, onboarding issues, support escalations, or technical debugging.
 
-Surface an item when the thread reveals user-facing confusion, unclear behavior, missing messaging, workflow friction, unclear labels, missing controls, or a product experience gap.
+Surface an item when the thread reveals user-facing confusion, unclear behavior, missing messaging, workflow friction, unclear labels, missing controls, missing next steps, or a product experience gap that UX/product design can improve.
 
 Strong positive signals:
 
@@ -269,28 +341,29 @@ Strong positive signals:
 - Someone asks "why does this happen?", "is this expected?", "how do I?", "where do I?", or "why can't I?"
 - The thread says something like "this looks broken", "made no sense", "confusing", "not obvious", "hard to explain", "we need messaging", or "customer asked".
 - A PM or designer is tagged.
-- Multiple people discuss how the product should explain, label, expose, or handle something.
+- Multiple people discuss how the product should explain, label, expose, warn, guide, or recover.
 - There is a workaround that users must learn outside the product.
 - The answer is "not a bug" but the user experience still caused confusion.
 - The same question/problem appears more than once.
 - Screenshots/videos are shared to explain confusion.
 - The issue blocks a demo, trial, onboarding, or adoption.
 - The UI/report/API/product wording appears inconsistent to users.
-- Users cannot tell whether something succeeded, failed, is unsupported, or requires another action.
+- Users cannot tell whether something succeeded, failed, is unsupported, waiting, blocked, or requires another action.
 
 Weak or negative signals:
 
 - Pure backend debugging
 - Internal implementation discussion
-- Incident response with no user-facing confusion
+- Incident response with no user-facing design gap
 - Deal-status updates
 - Roadmap speculation
-- Engineering root-cause analysis without a visible product behavior
+- Engineering root-cause analysis without a visible UX design implication
 - Isolated technical failures with no clear product-experience implication
-- Performance or reliability issues where the user-facing design impact is unclear
+- Performance or reliability issues where the UX design impact is unclear
 - Unfinished setup without evidence of confusing product messaging or UI behavior
+- Missing product capability without a UX/design artifact to improve
 
-If a technical thread has a clear user-facing impact, rewrite it as the user-facing problem and omit unnecessary engineering details.
+If a technical thread has a clear user-facing UX impact, rewrite it as the design problem and omit unnecessary engineering details.
 
 ## Design confidence
 
@@ -298,11 +371,11 @@ Use design confidence internally to rank and filter candidates.
 
 Confidence levels:
 
-- high: clear user/customer confusion, demo friction, missing product messaging, unclear UI behavior, or workflow blocker
-- medium: likely product/design friction, but evidence is indirect
+- high: clear user/customer confusion, demo friction, missing product messaging, unclear UI behavior, or workflow blocker that UX/product design can materially improve
+- medium: likely UX/design friction, but evidence is indirect
 - low: possibly relevant, but mostly technical/internal
 
-Low-confidence items should usually be filtered out unless they duplicate or strengthen an existing outstanding issue.
+Low-confidence items should usually be filtered out unless they duplicate or strengthen an existing outstanding UX design issue.
 
 Do not show the confidence label in the top-level digest unless explicitly asked.
 
@@ -312,7 +385,7 @@ You may internally classify each item by:
 
 - area
 - feature
-- ease
+- likely design artifact
 - confidence
 - inferred state
 - seen count
@@ -323,13 +396,13 @@ Only include metadata if it helps the reader understand what to do.
 
 ## Deduplication
 
-Deduplicate source feedback into canonical outstanding issues.
+Deduplicate source feedback into canonical outstanding UX design issues.
 
 Deduplication means merging duplicate source threads into one canonical issue.
 
 Deduplication does not mean hiding still-open issues from the digest.
 
-Treat messages as duplicates if they describe the same underlying user need, pain, confusion, bug, or feature request.
+Treat messages as duplicates if they describe the same underlying user need, pain, confusion, design gap, or recovery problem.
 
 When deduplicating:
 
@@ -355,7 +428,7 @@ Use only these visible statuses in the digest:
 Status meanings:
 
 - needs-attention: no meaningful PM/design/engineering response is visible
-- being-looked-at: someone relevant has acknowledged, is reviewing, is investigating, or is working on it
+- being-looked-at: someone relevant has acknowledged, is reviewing, is investigating, is discussing, or is working on it
 - unclear: there is discussion, but the state cannot be inferred confidently
 
 If someone says "we are looking into it", use:
@@ -370,7 +443,7 @@ Do not use:
 
 - in-progress
 
-Do not remove the issue from the digest until the thread clearly says the fix is shipped, released, deployed, available, confirmed fixed, intentionally closed, or no longer relevant.
+Do not remove the issue from the digest until the thread clearly says the fix is shipped, released, deployed, available, confirmed fixed, intentionally closed, no longer relevant, or no longer UX-design-actionable.
 
 If someone says the issue is fixed, shipped, resolved, expected behavior with no product change needed, intentionally closed, or no longer relevant, remove it from the outstanding digest.
 
@@ -386,7 +459,7 @@ Do not require humans to triage every item.
 
 If a human explicitly asks to ignore, discard, or stop showing an item, honor that in future summaries.
 
-Otherwise, reduce noise by filtering low-confidence items that are not meaningful design/product-experience issues.
+Otherwise, reduce noise by filtering low-confidence items that are not meaningful UX-design-actionable issues.
 
 ## Source links
 
@@ -436,13 +509,13 @@ Do not create separate item threads.
 The top-level daily digest must contain:
 
 - scan scope and short counts
-- total known outstanding issue count
-- top 5 outstanding design/product-experience issues
+- total known outstanding UX design issue count
+- top 5 outstanding UX-design-actionable issues
 - a note that remaining outstanding issues are in the thread, if any
 
 The top-level message must not be a wall of text.
 
-Do not expose internal metadata fields like confidence, area, feature, ease, or seen count in the top-level digest by default.
+Do not expose internal metadata fields like confidence, area, feature, design artifact, or seen count in the top-level digest by default.
 
 ## Top-level digest content
 
@@ -453,7 +526,8 @@ The top-level digest should prioritize the top 5 outstanding issues by:
 3. frequency/repeated mentions
 4. lack of clear ownership or resolution
 5. risk of user confusion
-6. recent activity
+6. how directly UX/product design can act on it
+7. recent activity
 
 The top 5 can include issues with status:
 
@@ -466,6 +540,8 @@ Do not include resolved issues.
 Do not include closed-no-action issues.
 
 Do not include an in-progress status.
+
+Do not include issues where the primary fix is engineering/product capability unless there is a clear UX/design artifact.
 
 ## Numbering
 
@@ -495,31 +571,31 @@ Thread response:
 
 Use this format:
 
-## Evo Design Feedback Daily - <date>
+## Evo UX Design Feedback Daily - <date>
 
-Scanned #ask-evo and #p-evo-ui. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: <number>. New or updated in this run: <number>.
+Scanned #ask-evo and #p-evo-ui. Reviewed <number> candidate threads from <time window>. Current outstanding UX-design-actionable issues: <number>. New or updated in this run: <number>.
 
-### Top outstanding issues
+### Top outstanding UX design issues
 
-1. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
+1. **<short user-facing design problem>.** <one short sentence explaining why it matters to the user and why UX/design can act on it>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
 
-2. **<short user-facing problem>.** <one short sentence explaining why it matters>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
+2. **<short user-facing design problem>.** <one short sentence explaining why it matters to the user and why UX/design can act on it>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
 
 Remaining outstanding issues are in this thread.
 
 If there are no outstanding issues, use this format:
 
-## Evo Design Feedback Daily - <date>
+## Evo UX Design Feedback Daily - <date>
 
-Scanned #ask-evo and #p-evo-ui. Reviewed <number> candidate threads from <time window>. Current outstanding design/product-experience issues: 0.
+Scanned #ask-evo and #p-evo-ui. Reviewed <number> candidate threads from <time window>. Current outstanding UX-design-actionable issues: 0.
 
-No outstanding Evo design/product-experience issues found.
+No outstanding Evo UX-design-actionable issues found.
 
 ## Thread response structure
 
 Post one thread response under the daily digest if there are remaining outstanding issues or additional candidates.
 
-The thread response should first list remaining outstanding issues not included in the top-level top 5.
+The thread response should first list remaining outstanding UX design issues not included in the top-level top 5.
 
 Then, if useful, list additional recent candidates that are not yet strong enough to be considered outstanding.
 
@@ -527,11 +603,11 @@ Continue numbering from the top-level digest.
 
 Use this format if the top-level digest had 5 items:
 
-## Remaining outstanding issues
+## Remaining outstanding UX design issues
 
-6. **<short user-facing problem>.** <short reason it still matters>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
+6. **<short user-facing design problem>.** <short reason it still matters and why UX/design can act on it>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
 
-7. **<short user-facing problem>.** <short reason it still matters>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
+7. **<short user-facing design problem>.** <short reason it still matters and why UX/design can act on it>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
 
 ## Additional recent candidates
 
@@ -539,7 +615,7 @@ Only include this section if there are meaningful medium-confidence candidates t
 
 Do not include more than 10 additional recent candidates.
 
-8. **<short user-facing problem>.** <short reason it may matter>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
+8. **<short user-facing design problem>.** <short reason it may matter>. Status: <needs-attention|being-looked-at|unclear>. Source: <SLACK_PERMALINK|source>.
 
 ## Filtered out
 
@@ -547,7 +623,7 @@ Briefly summarize filtered-out categories without listing every item.
 
 Example:
 
-Filtered out mostly backend/debugging threads, unfinished setup/support-debugging threads, deal/status updates without product signal, low-confidence technical discussions, and duplicates that were folded into outstanding issues.
+Filtered out mostly backend/debugging threads, unfinished setup/support-debugging threads, deal/status updates without product signal, low-confidence technical discussions, product capability gaps without a UX design artifact, and duplicates that were folded into outstanding issues.
 
 Do not list resolved items here.
 
@@ -557,11 +633,11 @@ Do not list closed-no-action items here.
 
 Be concise.
 
-Each issue should be framed as a user-facing product/design problem.
+Each issue should be framed as a user-facing UX design problem.
 
 Do not include long root-cause explanations.
 
-Do not include deal details, internal team plans, or engineering speculation unless essential to understanding the user-facing issue.
+Do not include deal details, internal team plans, or engineering speculation unless essential to understanding the user-facing design issue.
 
 Do not output bullet lists of metadata for each issue in the top-level digest.
 
@@ -577,11 +653,19 @@ Avoid this framing:
 
 Prefer this framing:
 
-"Group selector makes data look missing during POVs. Customers read it as a bug; the thread suggests in-product messaging may be needed."
+"Permission errors do not name the required role, so users cannot tell who can complete the upload."
 
 Avoid this framing:
 
-"Confidence: high. Area: navigation. Feature: Group selector. Status: acknowledged. Seen: 2. Why it matters: Data silently vanishes during POVs and demos."
+"Group member tokens fail and group admin tokens work."
+
+Prefer this framing:
+
+"The COS report and UI use different terms for the same result, making users reconcile counts manually."
+
+Avoid this framing:
+
+"The report has 30 vulnerabilities and 5 attack chains while the UI has 35 vulnerabilities and 30 findings."
 
 ## Safety rules
 
